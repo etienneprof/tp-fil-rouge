@@ -2,7 +2,9 @@ package bll;
 
 import java.util.List;
 
+import bo.Horaire;
 import bo.Restaurant;
+import bo.Table;
 import dal.DALException;
 import dal.GenericDAO;
 import dal.jdbc.RestaurantDAOJdbcImpl;
@@ -34,10 +36,12 @@ public class RestaurantBLL {
 		}
 	}
 	
-	public Restaurant insert(String nom, String adresse) throws BLLException {
+	public Restaurant insert(String nom, String adresse, List<Horaire> horaires, List<Table> tables) throws BLLException {
 		Restaurant restaurant = new Restaurant();
 		restaurant.setNom(nom);
 		restaurant.setAdresse(adresse);
+		restaurant.setHoraires(horaires);
+		restaurant.setTables(tables);
 		try {
 			dao.insert(restaurant);
 		} catch (DALException e) {

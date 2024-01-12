@@ -9,6 +9,7 @@ public class Restaurant {
 	private String urlImage;
 	private Carte carte;
 	private List<Horaire> horaires;
+	private List<Table> tables;
 	
 	public Restaurant() {}
 
@@ -58,5 +59,13 @@ public class Restaurant {
 
 	public void setHoraires(List<Horaire> horaires) {
 		this.horaires = horaires;
+	}
+	
+	public List<Table> getTables() {
+		return tables;
+	}
+	
+	public void setTables(List<Table> tables) {
+		this.tables = tables;
 	}
 }

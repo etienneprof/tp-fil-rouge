@@ -4,11 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
 import bo.Carte;
+import bo.Horaire;
 import bo.Restaurant;
+import bo.Table;
 import dal.ConnectionProvider;
 import dal.DALException;
 import dal.GenericDAO;
@@ -19,6 +22,8 @@ public class RestaurantDAOJdbcImpl implements GenericDAO<Restaurant> {
 	private static final String DELETE = "DELETE FROM"+ TABLE_NAME +" WHERE id = ?";
 	private static final String UPDATE = "UPDATE "+ TABLE_NAME +" SET nom = ?, adresse = ?, url_img = ?, id_carte = ? WHERE id = ?";
 	private static final String INSERT = "INSERT INTO "+ TABLE_NAME +" (nom, adresse) VALUES (?,?)";
+	private static final String INSERT_HORAIRE = "INSERT INTO horaires (jour, ouverture, fermeture, id_restaurant) VALUES (?,?,?,?)";
+	private static final String INSERT_TABLE = "INSERT INTO tables (nb_places, etat, id_restaurant) VALUES (?,?,?)";
 	private static final String SELECT_BY_ID = "SELECT * FROM "+ TABLE_NAME +" WHERE id = ?";
 	private static final String SELECT = "SELECT * FROM "+ TABLE_NAME;
 
@@ -88,6 +93,20 @@ public class RestaurantDAOJdbcImpl implements GenericDAO<Restaurant> {
 			ResultSet rs = ps.getGeneratedKeys();
 			if (rs.next()) {
 				donnee.setId(rs.getInt(1));
+			}
+			for (Horaire current : donnee.getHoraires()) {
+				PreparedStatement psHoraires = cnx.prepareStatement(INSERT_HORAIRE);
+				psHoraires.setString(1, current.getJour());
+				psHoraires.setTime(2, Time.valueOf(current.getOuverture()));
+				psHoraires.setTime(3, Time.valueOf(current.getFermeture()));
+				psHoraires.setInt(4, donnee.getId());
+				psHoraires.executeUpdate();
+			}
+			for (Table current : donnee.getTables()) {
+				PreparedStatement psTables = cnx.prepareStatement(INSERT_TABLE);
+				psTables.setInt(1, current.getNbPlaces());
+				psTables.setString(2, current.getEtat());
+				psTables.setInt(3, donnee.getId());
 			}
 		} catch (SQLException e) {
 			throw new DALException("Erreur lors de l'insertion des données :\n" + e.getMessage(), e);
