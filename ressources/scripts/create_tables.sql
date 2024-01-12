@@ -4,8 +4,8 @@ CREATE TABLE restaurants (
 	id				INT				PRIMARY KEY		IDENTITY,
 	nom				VARCHAR(30)		NOT NULL,
 	adresse			VARCHAR(80)		NOT NULL,
-	url_img			VARCHAR(256)	NOT NULL,
-	id_carte		INT				NOT NULL		DEFAULT 1
+	url_img			VARCHAR(256)	NULL,
+	id_carte		INT				NULL
 );
 
 CREATE TABLE cartes (
